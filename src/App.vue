@@ -1,7 +1,11 @@
 <template>
-  <div id="app">
+  <div id="app" class="bg-dark">
     <div class="b-container mx-auto text-center" style="max-width: 480px;">
-      <h2 class="mt-3">Upcoming Games</h2>
+      <header class="pt-2">
+        <a href="#"><img src="nysl_logo.png" alt="NYSL Logo" style="width: 115px;"></a>
+        <h2 class="mt-2 text-light">UPCOMING GAMES</h2>
+      </header>
+      <!-- <HelloWorld></HelloWorld> -->
       <div>
         <b-button v-b-toggle.collapse-september class="m-3">September</b-button>
         <b-collapse visible id="collapse-september">
