@@ -1,4 +1,4 @@
-# bootstrap-vue-example
+# nysl-game-schedule-app
 
 ## Project setup
 ```
