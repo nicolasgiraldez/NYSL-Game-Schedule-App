@@ -2,9 +2,19 @@
   <div id="app">
     <div class="b-container mx-auto text-center" style="max-width: 480px;">
       <header class="pt-2">
-        <a href="#">
-          <img src="nysl_logo.png" alt="NYSL Logo" style="width: 115px;" />
-        </a>
+        <b-row>
+          <b-col></b-col>
+          <b-col align-self="center">
+            <a href="#">
+              <img src="nysl_logo.png" alt="NYSL Logo" style="width: 115px;" />
+            </a>
+          </b-col>
+          <b-col align-self="right">
+            <b-button class="login-button">
+              <img src="login.svg" alt="Login" />
+            </b-button>
+          </b-col>
+        </b-row>
         <h2 class="mt-2 text-light font-weight-bold">UPCOMING GAMES</h2>
       </header>
       <div>
@@ -293,6 +303,15 @@ button.menu {
   background: #033949 !important;
   border-color: #a3ff15 !important;
   border-width: 2px !important;
+}
+
+.login-button {
+  background-color: transparent !important;
+  border: 0px !important;
+}
+
+.login-button img {
+  width: 32px;
 }
 
 .back-button {
