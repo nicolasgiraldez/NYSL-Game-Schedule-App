@@ -72,23 +72,89 @@
             </b-row>
           </div>
         </template>
-        <b-card-group deck class="text-center">
-          <b-card header="When?" text-variant="white">
+        <div class="text-center">
+          <b-card header="When?" text-variant="white" class="mb-6">
             <b-card-text>
-              <p>{{ partidoActivo.fecha }}</p>
-              <p>{{ partidoActivo.hora }}</p>
+              <div>{{ partidoActivo.fecha }}</div>
+              <div>{{ partidoActivo.hora }}</div>
             </b-card-text>
           </b-card>
+        </div>
+        <div class="text-center mt-3">
           <b-card header="Where?" text-variant="white">
-            <b-card-text>{{ partidoActivo.ubicacion }}</b-card-text>
+            <b-card-text>
+              <div>{{ partidoActivo.ubicacion }}</div>
+              <div>{{ direccion(partidoActivo.ubicacion) }}</div>
+              <div class="map-responsive mt-2">
+                <iframe
+                  :src="mapa(partidoActivo.ubicacion)"
+                  frameborder="0"
+                  style="border:0"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </b-card-text>
           </b-card>
-        </b-card-group>
+        </div>
       </b-modal>
     </div>
   </div>
 </template>
 
 <script>
+const ubicaciones = [
+  {
+    nombre: "AJ Katzenmaier",
+    direccion: "24 W. Walton St., Chicago, IL 60610",
+    mapa:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2969.654246110989!2d-87.63123908459744!3d41.900292379220375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880fd34e07f6bac3%3A0x68a82e5d59952c86!2s24+W+Walton+St%2C+Chicago%2C+IL+60610%2C+EE.+UU.!5e0!3m2!1ses-419!2sar!4v1555979654633!5m2!1ses-419!2sar"
+  },
+  {
+    nombre: "Greenbay",
+    direccion: "1734 N. Orleans St., Chicago, IL 60614",
+    mapa:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2969.0258843688553!2d-87.64002798462597!3d41.91380227921941!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880fd34073f306a3%3A0x9e1726bbf8f23f0e!2s1734+N+Orleans+St%2C+Chicago%2C+IL+60614%2C+EE.+UU.!5e0!3m2!1ses-419!2sar!4v1555980240536!5m2!1ses-419!2sar"
+  },
+  {
+    nombre: "Howard A Yeager",
+    direccion: "2245 N. Southport Ave., Chicago, IL 60614",
+    mapa:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.5856830856196!2d-87.6651145846198!3d41.923264579218625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880fd2e37f9b8d2d%3A0x62ad8b907dd755d6!2s2245+N+Southport+Ave%2C+Chicago%2C+IL+60614%2C+EE.+UU.!5e0!3m2!1ses-419!2sar!4v1555980924357!5m2!1ses-419!2sar"
+  },
+  {
+    nombre: "Marjorie P Hart",
+    direccion: "2625 N. Orchard St., Chicago, IL 60614",
+    mapa:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.2919146584286!2d-87.64808628461962!3d41.92957827921821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880fd30f2630e551%3A0x3e719e44a5cef714!2s2625+N+Orchard+St%2C+Chicago%2C+IL+60614%2C+EE.+UU.!5e0!3m2!1ses-419!2sar!4v1556081565001!5m2!1ses-419!2sar"
+  },
+  {
+    nombre: "North",
+    direccion: "1409 N. Ogden Ave., Chicago, IL 60610",
+    mapa:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2969.337799849208!2d-87.64837698462034!3d41.90709647921998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880fd33af0e6ccc3%3A0x26c81c1d557667da!2s1409+N+Ogden+Ave%2C+Chicago%2C+IL+60610%2C+EE.+UU.!5e0!3m2!1ses-419!2sar!4v1555981093835!5m2!1ses-419!2sar"
+  },
+  {
+    nombre: "South",
+    direccion: "2101 N. Fremont St., Chicago, IL 60614",
+    mapa:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.9243907367786!2d-87.65304238462014!3d41.91598407921926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880fd3188c084b73%3A0x492517dd97fe611e!2sN+Fremont+St%2C+Chicago%2C+IL+60614%2C+EE.+UU.!5e0!3m2!1ses-419!2sar!4v1555981145369!5m2!1ses-419!2sar"
+  }
+];
+
+function obtenerDireccion(nombre) {
+  let ubicacion = ubicaciones.find(function(ubicacionActual) {
+    return ubicacionActual.nombre === nombre;
+  });
+  return ubicacion.direccion;
+}
+
+function obtenerMapa(nombre) {
+  let ubicacion = ubicaciones.find(function(ubicacionActual) {
+    return ubicacionActual.nombre === nombre;
+  });
+  return ubicacion.mapa;
+}
+
 export default {
   name: "app",
   data() {
@@ -199,6 +265,18 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    direccion: function(nombre) {
+      if (nombre != null) {
+        return obtenerDireccion(nombre);
+      }
+    },
+    mapa: function(nombre) {
+      if (nombre != null) {
+        return obtenerMapa(nombre);
+      }
+    }
   }
 };
 </script>
@@ -241,6 +319,20 @@ button.menu {
 }
 
 .card {
-  background-color: #005C77 !important;
+  background-color: #005c77 !important;
+}
+
+.map-responsive {
+  overflow: hidden;
+  padding-bottom: 50%;
+  position: relative;
+  height: 0;
+}
+.map-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 </style>
