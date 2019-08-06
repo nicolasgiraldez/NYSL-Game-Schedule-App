@@ -10,9 +10,13 @@
             </a>
           </b-col>
           <b-col align-self="right">
-            <b-button class="login-button">
-              <img src="login.svg" alt="Login" />
-            </b-button>
+            <b-dropdown class="login-button" right>
+              <template slot="button-content">
+                <img src="login.svg" alt="Login" />
+              </template>
+              <b-dropdown-item href="#" v-b-modal.login>Sign In</b-dropdown-item>
+              <b-dropdown-item href="#">Sign Up</b-dropdown-item>
+            </b-dropdown>
           </b-col>
         </b-row>
         <h2 class="mt-2 text-light font-weight-bold">UPCOMING GAMES</h2>
@@ -103,6 +107,60 @@
                   allowfullscreen
                 ></iframe>
               </div>
+            </b-card-text>
+          </b-card>
+        </div>
+      </b-modal>
+      <b-modal
+        id="login"
+        centered
+        hide-footer
+        title="Sign In"
+        header-text-variant="white"
+        body-text-variant="white"
+      >
+        <template slot="modal-header" slot-scope="{ close }">
+          <div class="d-flex flex-column">
+            <b-row>
+              <b-col align-self="start">
+                <b-button class="back-button" @click="close()">
+                  <img src="back_arrow.svg" alt="Go back" />
+                </b-button>
+              </b-col>
+              <b-col cols="6" align-self="center">
+                <h5 class="text-center">Sign In</h5>
+              </b-col>
+              <b-col align-self="end"></b-col>
+            </b-row>
+          </div>
+        </template>
+        <div>
+          <b-card text-variant="white">
+            <b-card-text>
+              <b-form>
+                <b-form-group id="input-group-email" label="Email address:" label-for="input-email">
+                  <b-form-input
+                    id="input-email"
+                    type="email"
+                    required
+                    placeholder="example@nysl.org"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-password"
+                  label="Password:"
+                  label-for="input-password"
+                >
+                  <b-form-input id="input-password" type="password" required placeholder="••••••••"></b-form-input>
+                </b-form-group>
+                <div class="d-flex justify-content-center">
+                <b-button type="submit" class="card-button">Submit</b-button>
+                </div>
+              </b-form>
+              <p class="text-center mt-3">
+                Don't have an account?
+                <a href="" class="text-white">Sign up!</a>
+              </p>
             </b-card-text>
           </b-card>
         </div>
@@ -305,6 +363,11 @@ button.menu {
   border-width: 2px !important;
 }
 
+button.card-button {
+  background: #033949 !important;
+  border: 0px !important;
+}
+
 .login-button {
   background-color: transparent !important;
   border: 0px !important;
@@ -331,10 +394,13 @@ button.menu {
   display: block !important;
   background-color: #033949 !important;
   border-bottom: 0px !important;
+  padding-bottom: 0rem !important;
 }
 
 .modal-body {
   background-color: #033949 !important;
+  border-bottom-left-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
 }
 
 .card {
