@@ -154,7 +154,7 @@
                   <b-form-input id="input-password" type="password" required placeholder="••••••••"></b-form-input>
                 </b-form-group>
                 <div class="d-flex justify-content-center">
-                <b-button type="submit" class="card-button">Submit</b-button>
+                <b-button type="submit" class="card-button" @click="login">Submit</b-button>
                 </div>
               </b-form>
               <p class="text-center mt-3">
@@ -360,7 +360,7 @@ body {
 button.menu {
   background: #033949 !important;
   border-color: #a3ff15 !important;
-  border-width: 2px !important;
+  border-width: 0.1rem !important;
 }
 
 button.card-button {
