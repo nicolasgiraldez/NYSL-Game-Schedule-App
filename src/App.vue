@@ -125,7 +125,34 @@
             </b-card-text>
           </b-card>
         </div>
-        <div class="chat" v-if="loggedIn">Acá va el chat</div>
+        <div class="comments-outside" v-if="loggedIn">
+          <!-- <div class="comments-header">
+            <div class="comments-stats">
+              <span>
+                <i class="fa fa-thumbs-up"></i>
+                {{ likes }}
+              </span>
+              <span>
+                <i class="fa fa-comment"></i>
+                {{ comments.length }}
+              </span>
+            </div>
+            <div class="post-owner">
+              <div class="avatar">
+                <img :src="creator.avatar" alt />
+              </div>
+              <div class="username">
+                <a href="#">@{{ creator.user }}</a>
+              </div>
+            </div>
+          </div> -->
+          <comments
+            :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
+            :comments="comments"
+            :current_user="current_user"
+            @submit-comment="submitComment"
+          ></comments>
+        </div>
       </b-modal>
 
       <!-- Ventana de login -->
@@ -259,6 +286,7 @@
 
 <script>
 import firebase from "firebase";
+import Comments from "./components/Comments.vue";
 
 const ubicaciones = [
   {
@@ -315,6 +343,9 @@ function obtenerMapa(nombre) {
 
 export default {
   name: "app",
+  components: {
+    Comments
+  },
   data() {
     return {
       partidoActivo: "",
@@ -422,9 +453,38 @@ export default {
           ubicacion: "Howard A Yeager"
         }
       ],
-      loggedIn: false,
+      loggedIn: true,
       email: "",
-      password: ""
+      password: "",
+      // creator: {
+      //   avatar: "http://via.placeholder.com/100x100/a74848",
+      //   user: "exampleCreator"
+      // },
+      current_user: {
+        avatar: "http://via.placeholder.com/100x100/a74848",
+        user: "exampler"
+      },
+      comments: [
+        {
+          id: 1,
+          user: "Moe",
+          avatar: "moe.png",
+          text:
+            "Can't make it to the game, sorry."
+        },
+        {
+          id: 2,
+          user: "Larry",
+          avatar: "larry.png",
+          text: "Bringing Snacks!"
+        },
+        {
+          id: 3,
+          user: "Curly",
+          avatar: "curly.png",
+          text: "Go teams!"
+        }
+      ]
     };
   },
   methods: {
@@ -465,6 +525,14 @@ export default {
             alert("Oops.." + err.message);
           }
         );
+    },
+    submitComment: function(reply) {
+      this.comments.push({
+        id: this.comments.length + 1,
+        user: this.current_user.user,
+        avatar: this.current_user.avatar,
+        text: reply
+      });
     }
   }
 };
