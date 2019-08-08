@@ -182,7 +182,7 @@
         <div>
           <b-card text-variant="white">
             <b-card-text>
-              <b-form>
+              <b-form @keyup.enter="login">
                 <b-form-group id="input-group-email" label="Email address:" label-for="input-email">
                   <b-form-input
                     id="input-email"
@@ -245,7 +245,7 @@
         <div>
           <b-card text-variant="white">
             <b-card-text>
-              <b-form>
+              <b-form @keyup.enter="signup">
                 <b-form-group id="input-group-email" label="Email address:" label-for="input-email">
                   <b-form-input
                     id="input-email"
