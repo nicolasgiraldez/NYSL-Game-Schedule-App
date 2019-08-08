@@ -15,7 +15,7 @@
                 <img src="login.svg" alt="Login" />
               </template>
               <b-dropdown-item href="#" v-b-modal.login>Sign In</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Up</b-dropdown-item>
+              <b-dropdown-item href="#" v-b-modal.signup>Sign Up</b-dropdown-item>
             </b-dropdown>
           </b-col>
         </b-row>
@@ -63,6 +63,8 @@
           </div>
         </b-collapse>
       </div>
+
+      <!-- Ventana de detalles de cada juego -->
       <b-modal
         id="detalles"
         centered
@@ -110,7 +112,10 @@
             </b-card-text>
           </b-card>
         </div>
+        <div class="chat" v-if="loggedIn">Acá va el chat</div>
       </b-modal>
+
+      <!-- Ventana de login -->
       <b-modal
         id="login"
         centered
@@ -142,6 +147,7 @@
                   <b-form-input
                     id="input-email"
                     type="email"
+                    v-model="email"
                     required
                     placeholder="example@nysl.org"
                   ></b-form-input>
@@ -151,25 +157,98 @@
                   label="Password:"
                   label-for="input-password"
                 >
-                  <b-form-input id="input-password" type="password" required placeholder="••••••••"></b-form-input>
+                  <b-form-input
+                    id="input-password"
+                    type="password"
+                    v-model="password"
+                    required
+                    placeholder="••••••••"
+                  ></b-form-input>
                 </b-form-group>
                 <div class="d-flex justify-content-center">
-                <b-button type="submit" class="card-button" @click="login">Submit</b-button>
+                  <b-button class="card-button" @click="login">Submit</b-button>
                 </div>
               </b-form>
               <p class="text-center mt-3">
                 Don't have an account?
-                <a href="" class="text-white">Sign up!</a>
+                <a href class="text-white">Sign up!</a>
               </p>
             </b-card-text>
           </b-card>
         </div>
       </b-modal>
+
+      <!-- Ventana de registro -->
+      <b-modal
+        id="signup"
+        centered
+        hide-footer
+        title="Sign Up"
+        header-text-variant="white"
+        body-text-variant="white"
+      >
+        <template slot="modal-header" slot-scope="{ close }">
+          <div class="d-flex flex-column">
+            <b-row>
+              <b-col align-self="start">
+                <b-button class="back-button" @click="close()">
+                  <img src="back_arrow.svg" alt="Go back" />
+                </b-button>
+              </b-col>
+              <b-col cols="6" align-self="center">
+                <h5 class="text-center">Sign Up</h5>
+              </b-col>
+              <b-col align-self="end"></b-col>
+            </b-row>
+          </div>
+        </template>
+        <div>
+          <b-card text-variant="white">
+            <b-card-text>
+              <b-form>
+                <b-form-group id="input-group-email" label="Email address:" label-for="input-email">
+                  <b-form-input
+                    id="input-email"
+                    type="email"
+                    v-model="email"
+                    required
+                    placeholder="example@nysl.org"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-password"
+                  label="Password:"
+                  label-for="input-password"
+                >
+                  <b-form-input
+                    id="input-password"
+                    type="password"
+                    v-model="password"
+                    required
+                    placeholder="••••••••"
+                  ></b-form-input>
+                </b-form-group>
+                <div class="d-flex justify-content-center">
+                  <b-button class="card-button" @click="signup">Sign up</b-button>
+                </div>
+              </b-form>
+              <p class="text-center mt-3">
+                Already registered?
+                <a href class="text-white">Sign in!</a>
+              </p>
+            </b-card-text>
+          </b-card>
+        </div>
+      </b-modal>
+
     </div>
   </div>
 </template>
 
 <script>
+
+import firebase from "firebase";
+
 const ubicaciones = [
   {
     nombre: "AJ Katzenmaier",
@@ -331,7 +410,10 @@ export default {
           hora: "1:00 pm",
           ubicacion: "Howard A Yeager"
         }
-      ]
+      ],
+      loggedIn: false,
+      email: "",
+      password: ""
     };
   },
   methods: {
@@ -344,6 +426,28 @@ export default {
       if (nombre != null) {
         return obtenerMapa(nombre);
       }
+    },
+    login: function() {
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
+          (user) => {
+            this.loggedIn = true;
+            this.$bvModal.hide("login");
+          },
+          function(err) {
+            alert("Oops.." + err.message);
+          }
+        );
+    },
+    signup: function() {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
+          (user) => {
+            alert('Account created');
+            this.$bvModal.hide("signup");
+          },
+          function(err) {
+            alert("Oops.." + err.message);
+          }
+        );
     }
   }
 };
