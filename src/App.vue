@@ -1,9 +1,19 @@
 <template>
   <div id="app">
     <div class="b-container mx-auto text-center" style="max-width: 480px;">
-      <header class="pt-2">
+      <header class="pt-3">
         <b-row>
-          <b-col></b-col>
+          <b-col align-self="left">
+            <b-dropdown class="login-button" left>
+              <template slot="button-content">
+                <img src="menu.svg" alt="Menu" />
+              </template>
+              <b-dropdown-item href="#">Upcoming Games</b-dropdown-item>
+              <b-dropdown-item href="#">Past Games</b-dropdown-item>
+              <b-dropdown-item href="#">Upcoming Events</b-dropdown-item>
+              <b-dropdown-item href="#">About Us</b-dropdown-item>
+            </b-dropdown>
+          </b-col>
           <b-col align-self="center">
             <a href="#">
               <img src="nysl_logo.png" alt="NYSL Logo" style="width: 115px;" />
@@ -12,15 +22,18 @@
           <b-col align-self="right">
             <b-dropdown class="login-button" right>
               <template slot="button-content">
-                <img src="login.svg" alt="Login" />
+                <img src="login.svg" alt="Login" v-if="!loggedIn" />
+                <img src="login-successful.svg" alt="Login" v-if="loggedIn" />
               </template>
-              <b-dropdown-item href="#" v-b-modal.login>Sign In</b-dropdown-item>
-              <b-dropdown-item href="#" v-b-modal.signup>Sign Up</b-dropdown-item>
+              <b-dropdown-item href="#" v-b-modal.login v-if="!loggedIn">Sign In</b-dropdown-item>
+              <b-dropdown-item href="#" v-b-modal.signup v-if="!loggedIn">Sign Up</b-dropdown-item>
+              <b-dropdown-item href="#" v-if="loggedIn">Sign Out</b-dropdown-item>
             </b-dropdown>
           </b-col>
         </b-row>
-        <h2 class="mt-2 text-light font-weight-bold">UPCOMING GAMES</h2>
+        <h5 class="mt-3 text-light font-weight-bold">NORTHSIDE YOUTH SOCCER LEAGUE</h5>
       </header>
+      <h3 class="mt-2 text-light font-weight-bold">UPCOMING GAMES</h3>
       <div>
         <b-button v-b-toggle.collapse-september class="m-3 menu">September</b-button>
         <b-collapse visible id="collapse-september">
@@ -240,13 +253,11 @@
           </b-card>
         </div>
       </b-modal>
-
     </div>
   </div>
 </template>
 
 <script>
-
 import firebase from "firebase";
 
 const ubicaciones = [
@@ -428,8 +439,11 @@ export default {
       }
     },
     login: function() {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
-          (user) => {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(
+          user => {
             this.loggedIn = true;
             this.$bvModal.hide("login");
           },
@@ -439,9 +453,12 @@ export default {
         );
     },
     signup: function() {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
-          (user) => {
-            alert('Account created');
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.email, this.password)
+        .then(
+          user => {
+            alert("Account created");
             this.$bvModal.hide("signup");
           },
           function(err) {
@@ -472,7 +489,7 @@ button.card-button {
   border: 0px !important;
 }
 
-.login-button {
+.dropdown-toggle {
   background-color: transparent !important;
   border: 0px !important;
 }
