@@ -10,8 +10,8 @@
               </template>
               <b-dropdown-item href="#">Upcoming Games</b-dropdown-item>
               <b-dropdown-item href="#">Past Games</b-dropdown-item>
-              <b-dropdown-item href="#">Upcoming Events</b-dropdown-item>
-              <b-dropdown-item href="#">About Us</b-dropdown-item>
+              <!-- <b-dropdown-item href="#">Upcoming Events</b-dropdown-item>
+              <b-dropdown-item href="#">About NYSL</b-dropdown-item>-->
             </b-dropdown>
           </b-col>
           <b-col align-self="center">
@@ -27,7 +27,7 @@
               </template>
               <b-dropdown-item href="#" v-b-modal.login v-if="!loggedIn">Sign In</b-dropdown-item>
               <b-dropdown-item href="#" v-b-modal.signup v-if="!loggedIn">Sign Up</b-dropdown-item>
-              <b-dropdown-item href="#" v-if="loggedIn">Sign Out</b-dropdown-item>
+              <b-dropdown-item href="#" v-if="loggedIn" @click="logout">Sign Out</b-dropdown-item>
             </b-dropdown>
           </b-col>
         </b-row>
@@ -145,7 +145,7 @@
                 <a href="#">@{{ creator.user }}</a>
               </div>
             </div>
-          </div> -->
+          </div>-->
           <comments
             :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
             :comments="comments"
@@ -265,7 +265,7 @@
                     type="password"
                     v-model="password"
                     required
-                    placeholder="••••••••"
+                    placeholder="Must be at least 6 characters"
                   ></b-form-input>
                 </b-form-group>
                 <div class="d-flex justify-content-center">
@@ -453,7 +453,7 @@ export default {
           ubicacion: "Howard A Yeager"
         }
       ],
-      loggedIn: true,
+      loggedIn: false,
       email: "",
       password: "",
       // creator: {
@@ -469,8 +469,7 @@ export default {
           id: 1,
           user: "Moe",
           avatar: "moe.png",
-          text:
-            "Can't make it to the game, sorry."
+          text: "Can't make it to the game, sorry."
         },
         {
           id: 2,
@@ -525,6 +524,15 @@ export default {
             alert("Oops.." + err.message);
           }
         );
+    },
+    logout: function() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          // Sign-out successful.
+          this.loggedIn = false;
+        });
     },
     submitComment: function(reply) {
       this.comments.push({
