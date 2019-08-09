@@ -1,13 +1,16 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import firebase from 'firebase';
-import App from './App.vue'
-import BootstrapVue from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import App from './App.vue';
+import BootstrapVue from 'bootstrap-vue';
+import VueRouter from 'vue-router';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import router from './router';
 
 Vue.use(BootstrapVue);
+Vue.use(VueRouter);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 // Firebase configuration
 const firebaseConfig = {
@@ -24,5 +27,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 new Vue({
+  router,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
