@@ -263,6 +263,10 @@ button.card-button {
   border: 0px !important;
 }
 
+.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0 transparent !important;
+}
+
 .login-button img {
   width: 32px;
 }
