@@ -45,7 +45,9 @@
     </header>
 
     <!-- Muestra la vista actual -->
-    <router-view :loggedIn="isLoggedIn" />
+    <transition name="slide-fade" mode="out-in">
+      <router-view :loggedIn="isLoggedIn" />
+    </transition>
 
     <!-- Ventana de login -->
     <b-modal
@@ -175,7 +177,6 @@
 
 <script>
 import firebase from "firebase";
-import Comments from "./components/Comments.vue";
 
 export default {
   name: "app",
@@ -183,7 +184,7 @@ export default {
     return {
       email: "",
       password: "",
-      isLoggedIn: false,
+      isLoggedIn: false
     };
   },
   methods: {
@@ -229,7 +230,7 @@ export default {
         });
     },
     updateLoginState: function() {
-      this.isLoggedIn = (firebase.auth().currentUser != null);
+      this.isLoggedIn = firebase.auth().currentUser != null;
     }
   }
 };
@@ -314,4 +315,17 @@ button.card-button {
   width: 100%;
   position: absolute;
 }
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for <2.1.8 */ {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
 </style>
