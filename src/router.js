@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import UpcomingGames from "./views/UpcomingGames.vue";
+import PastGames from "./views/PastGames.vue";
 
 Vue.use(Router);
 
@@ -12,6 +13,11 @@ export default new Router({
       path: "/",
       name: "upcoming-games",
       component: UpcomingGames
+    },
+    {
+      path: "/past-games",
+      name: "past-games",
+      component: PastGames
     },
     {
       path: "/about",

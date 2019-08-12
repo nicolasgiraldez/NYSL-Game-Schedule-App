@@ -1,13 +1,14 @@
 <template>
-  <div id="upcoming-games">
-    <h3 class="mt-2 mb-3 text-light font-weight-bold">UPCOMING GAMES</h3>
+  <div id="past-games">
+    <h3 class="mt-2 mb-3 text-light font-weight-bold">PAST GAMES</h3>
     <div>
       <b-row class="justify-content-between mt-4 mb-2">
         <b-col>
           <b-form-select v-model="mesSeleccionado" @change="filtrarPartidos">
             <option :value="null" disabled>Filter by Month</option>
-            <option value="2019-09">September</option>
-            <option value="2019-10">October</option>
+            <option value="2019-08">August</option>
+            <option value="2019-07">July</option>
+            <option value="2019-06">June</option>
             <option value="all">All</option>
           </b-form-select>
         </b-col>
@@ -148,119 +149,119 @@ const partidos = [
   {
     id: 0,
     equipos: "U1 vs U4",
-    fecha: "2019-09-01",
+    fecha: "2019-06-01",
     hora: "9:30 am",
     ubicacion: "AJ Katzenmaier"
   },
   {
     id: 1,
     equipos: "U3 vs U2",
-    fecha: "2019-09-01",
+    fecha: "2019-06-01",
     hora: "1:00 pm",
     ubicacion: "Greenbay"
   },
   {
     id: 2,
     equipos: "U5 vs U6",
-    fecha: "2019-09-08",
+    fecha: "2019-06-08",
     hora: "9:30 am",
     ubicacion: "Howard A Yeager"
   },
   {
     id: 3,
     equipos: "U6 vs U1",
-    fecha: "2019-09-08",
+    fecha: "2019-06-08",
     hora: "1:00 pm",
     ubicacion: "Marjorie P Hart"
   },
   {
     id: 4,
     equipos: "U2 vs U4",
-    fecha: "2019-09-15",
+    fecha: "2019-06-15",
     hora: "9:30 am",
     ubicacion: "North"
   },
   {
     id: 5,
     equipos: "U3 vs U5",
-    fecha: "2019-09-15",
+    fecha: "2019-07-15",
     hora: "1:00 pm",
     ubicacion: "AJ Katzenmaier"
   },
   {
     id: 6,
     equipos: "U1 vs U3",
-    fecha: "2019-09-22",
+    fecha: "2019-07-22",
     hora: "9:30 am",
     ubicacion: "South"
   },
   {
     id: 7,
     equipos: "U2 vs U6",
-    fecha: "2019-09-22",
+    fecha: "2019-07-22",
     hora: "1:00 pm",
     ubicacion: "Howard A Yeager"
   },
   {
     id: 8,
     equipos: "U4 vs U5",
-    fecha: "2019-09-29",
+    fecha: "2019-07-29",
     hora: "9:30 am",
     ubicacion: "Greenbay"
   },
   {
     id: 9,
     equipos: "U2 vs U5",
-    fecha: "2019-10-06",
+    fecha: "2019-07-06",
     hora: "9:30 am",
     ubicacion: "Marjorie P Hart"
   },
   {
     id: 10,
     equipos: "U1 vs U6",
-    fecha: "2019-10-06",
+    fecha: "2019-07-06",
     hora: "1:00 pm",
     ubicacion: "South"
   },
   {
     id: 11,
     equipos: "U3 vs U4",
-    fecha: "2019-10-08",
+    fecha: "2019-08-08",
     hora: "9:30 am",
     ubicacion: "Howard A Yeager"
   },
   {
     id: 12,
     equipos: "U5 vs U1",
-    fecha: "2019-10-08",
+    fecha: "2019-08-08",
     hora: "1:00 pm",
     ubicacion: "Greenbay"
   },
   {
     id: 13,
     equipos: "U6 vs U3",
-    fecha: "2019-10-20",
+    fecha: "2019-08-20",
     hora: "9:30 am",
     ubicacion: "North"
   },
   {
     id: 14,
     equipos: "U2 vs U4",
-    fecha: "2019-10-20",
+    fecha: "2019-08-20",
     hora: "1:00 pm",
     ubicacion: "Marjorie P Hart"
   },
   {
     id: 15,
     equipos: "U3 vs U1",
-    fecha: "2019-10-27",
+    fecha: "2019-08-27",
     hora: "9:30 am",
     ubicacion: "AJ Katzenmaier"
   },
   {
     id: 16,
     equipos: "U5 vs U6",
-    fecha: "2019-10-27",
+    fecha: "2019-08-27",
     hora: "1:00 pm",
     ubicacion: "Howard A Yeager"
   }
@@ -295,7 +296,7 @@ function filtrarPartidoPorEquipo(equipo) {
 }
 
 export default {
-  name: "upcoming-games",
+  name: "past-games",
   components: {
     Comments
   },

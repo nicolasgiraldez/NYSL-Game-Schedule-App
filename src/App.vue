@@ -1,20 +1,22 @@
 <template>
   <!-- Contenedor de la App -->
-  <div id="app" class="b-container mx-auto text-center" style="max-width: 480px;">
+  <div id="app" class="b-container mx-auto text-center p-3">
     <!-- Encabezado -->
-    <header class="pt-3">
+    <header>
       <b-row class="justify-content-between">
         <!-- Botón izquierdo (menú) -->
-        <b-col>
+        <b-col class="text-left">
           <b-dropdown class="login-button" left>
             <template slot="button-content">
               <img src="menu.svg" alt="Menu" />
             </template>
-            <b-dropdown-item href="#">
+            <b-dropdown-item>
               <router-link to="/" tag="span">Upcoming Games</router-link>
             </b-dropdown-item>
-            <b-dropdown-item href="#">Past Games</b-dropdown-item>
-            <b-dropdown-item href="/about">
+            <b-dropdown-item>
+              <router-link to="/past-games" tag="span">Past Games</router-link>
+            </b-dropdown-item>
+            <b-dropdown-item>
               <router-link to="/about" tag="span">About NYSL</router-link>
             </b-dropdown-item>
           </b-dropdown>
@@ -26,15 +28,15 @@
           </a>
         </b-col>
         <!-- Botón derecho (login) -->
-        <b-col>
+        <b-col class="text-right">
           <b-dropdown class="login-button" right>
             <template slot="button-content">
-              <img src="login.svg" alt="Login" v-if="!loggedIn" />
-              <img src="login-successful.svg" alt="Login" v-if="loggedIn" />
+              <img src="login.svg" alt="Login" v-if="!isLoggedIn" />
+              <img src="login-successful.svg" alt="Login" v-if="isLoggedIn" />
             </template>
-            <b-dropdown-item href="#" v-b-modal.login v-if="!loggedIn">Sign In</b-dropdown-item>
-            <b-dropdown-item href="#" v-b-modal.signup v-if="!loggedIn">Sign Up</b-dropdown-item>
-            <b-dropdown-item href="#" v-if="loggedIn" @click="logout">Sign Out</b-dropdown-item>
+            <b-dropdown-item href="#" v-b-modal.login v-if="!isLoggedIn">Sign In</b-dropdown-item>
+            <b-dropdown-item href="#" v-b-modal.signup v-if="!isLoggedIn">Sign Up</b-dropdown-item>
+            <b-dropdown-item href="#" v-if="isLoggedIn" @click="logout">Sign Out</b-dropdown-item>
           </b-dropdown>
         </b-col>
       </b-row>
@@ -43,7 +45,7 @@
     </header>
 
     <!-- Muestra la vista actual -->
-    <router-view :isLoggedIn="loggedIn" />
+    <router-view :loggedIn="isLoggedIn" />
 
     <!-- Ventana de login -->
     <b-modal
@@ -81,6 +83,7 @@
                   type="email"
                   v-model="email"
                   required
+                  autofocus
                   placeholder="example@nysl.org"
                 ></b-form-input>
               </b-form-group>
@@ -97,7 +100,7 @@
                 <b-button class="card-button" @click="login">Submit</b-button>
               </div>
             </b-form>
-            <p class="text-center mt-3">
+            <p class="text-center mt-3 mb-0">
               Don't have an account?
               <a href class="text-white">Sign up!</a>
             </p>
@@ -142,6 +145,7 @@
                   type="email"
                   v-model="email"
                   required
+                  autofocus
                   placeholder="example@nysl.org"
                 ></b-form-input>
               </b-form-group>
@@ -175,38 +179,11 @@ import Comments from "./components/Comments.vue";
 
 export default {
   name: "app",
-  components: {
-    Comments
-  },
   data() {
     return {
       email: "",
       password: "",
-      loggedIn: false,
-      current_user: {
-        avatar: "http://via.placeholder.com/100x100/a74848",
-        user: "exampler"
-      },
-      comments: [
-        {
-          id: 1,
-          user: "Moe",
-          avatar: "moe.png",
-          text: "Can't make it to the game, sorry."
-        },
-        {
-          id: 2,
-          user: "Larry",
-          avatar: "larry.png",
-          text: "Bringing Snacks!"
-        },
-        {
-          id: 3,
-          user: "Curly",
-          avatar: "curly.png",
-          text: "Go teams!"
-        }
-      ]
+      isLoggedIn: false,
     };
   },
   methods: {
@@ -216,8 +193,10 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           user => {
-            this.loggedIn = true;
+            this.updateLoginState();
             this.$bvModal.hide("login");
+            this.email = "";
+            this.password = "";
           },
           function(err) {
             alert("Oops.." + err.message);
@@ -230,8 +209,10 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(
           user => {
-            alert("Account created");
+            alert("Account created successfully!");
             this.$bvModal.hide("signup");
+            this.email = "";
+            this.password = "";
           },
           function(err) {
             alert("Oops.." + err.message);
@@ -244,8 +225,11 @@ export default {
         .signOut()
         .then(() => {
           // Sign-out successful.
-          this.loggedIn = false;
+          this.updateLoginState();
         });
+    },
+    updateLoginState: function() {
+      this.isLoggedIn = (firebase.auth().currentUser != null);
     }
   }
 };
@@ -257,6 +241,10 @@ export default {
 body {
   background: #343a40 !important;
   font-family: "Lato", sans-serif !important;
+}
+
+#app {
+  max-width: 35rem;
 }
 
 button.menu {
