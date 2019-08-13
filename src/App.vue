@@ -46,7 +46,7 @@
 
     <!-- Muestra la vista actual -->
     <transition name="slide-fade" mode="out-in">
-      <router-view :loggedIn="isLoggedIn" :listaPartidos="partidos" :db="db" />
+      <router-view :loggedIn="isLoggedIn" :listaPartidos="partidos" />
     </transition>
 
     <!-- Ventana de login -->
@@ -141,13 +141,22 @@
         <b-card text-variant="white">
           <b-card-text>
             <b-form @keyup.enter="signup">
+              <b-form-group id="input-group-name" label="Name:" label-for="input-name">
+                <b-form-input
+                  id="input-name"
+                  type="text"
+                  v-model="name"
+                  required
+                  autofocus
+                  placeholder="Your name"
+                ></b-form-input>
+              </b-form-group>
               <b-form-group id="input-group-email" label="Email address:" label-for="input-email">
                 <b-form-input
                   id="input-email"
                   type="email"
                   v-model="email"
                   required
-                  autofocus
                   placeholder="example@nysl.org"
                 ></b-form-input>
               </b-form-group>
@@ -177,22 +186,7 @@
 
 <script>
 import firebase from "firebase";
-import { rtdbPlugin } from 'vuefire';
-
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCR5W7FjtDQVIhSmPSldpClS_4dXMSLxHc",
-  authDomain: "nysl-game-schedule-app.firebaseapp.com",
-  databaseURL: "https://nysl-game-schedule-app.firebaseio.com",
-  projectId: "nysl-game-schedule-app",
-  storageBucket: "",
-  messagingSenderId: "1099447516370",
-  appId: "1:1099447516370:web:81335978eb5a4f29"
-};
-
-// Initialize Firebase
-let firebaseApp = firebase.initializeApp(firebaseConfig);
-let firebaseDb = firebaseApp.database();
+import { rtdbPlugin } from "vuefire";
 
 export default {
   name: "app",
@@ -200,13 +194,10 @@ export default {
     return {
       email: "",
       password: "",
+      name: "",
       isLoggedIn: false,
-      partidos: [],
-      db: firebaseDb
+      partidos: []
     };
-  },
-  firebase: {
-    partidos: firebaseDb.ref('partidos'),
   },
   methods: {
     login: function() {
@@ -231,8 +222,13 @@ export default {
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(
           user => {
+            let usuario = firebase.auth().currentUser;
+            usuario.updateProfile({
+              displayName: this.name
+            });
             alert("Account created successfully!");
             this.$bvModal.hide("signup");
+            this.name = "";
             this.email = "";
             this.password = "";
           },
@@ -338,15 +334,14 @@ button.card-button {
 }
 
 .slide-fade-enter-active {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 .slide-fade-leave-active {
-  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active for <2.1.8 */ {
   transform: translateY(10px);
   opacity: 0;
 }
-
 </style>

@@ -68,7 +68,7 @@
       <div class="text-center">
         <b-card header="When?" text-variant="white" class="mb-6">
           <b-card-text v-if="listaPartidos[partidoActivo.id]">
-            <div >{{ listaPartidos[partidoActivo.id].fecha }}</div>
+            <div>{{ listaPartidos[partidoActivo.id].fecha }}</div>
             <div>{{ listaPartidos[partidoActivo.id].hora }}</div>
           </b-card-text>
         </b-card>
@@ -102,7 +102,27 @@
 </template>
 
 <script>
+import firebase from "firebase";
+import { rtdbPlugin } from "vuefire";
+// import { db } from "../main"
 import Comments from "@/components/Comments.vue";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCR5W7FjtDQVIhSmPSldpClS_4dXMSLxHc",
+  authDomain: "nysl-game-schedule-app.firebaseapp.com",
+  databaseURL: "https://nysl-game-schedule-app.firebaseio.com",
+  projectId: "nysl-game-schedule-app",
+  storageBucket: "",
+  messagingSenderId: "1099447516370",
+  appId: "1:1099447516370:web:81335978eb5a4f29"
+};
+
+// Initialize Firebase
+// const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const db = firebase.initializeApp(firebaseConfig).database();
+
+let partidos = db.ref("partidos");
 
 const ubicaciones = [
   {
@@ -208,25 +228,26 @@ export default {
       listaEquipos: ["U1", "U2", "U3", "U4", "U5", "U6"],
       mesSeleccionado: null,
       equipoSeleccionado: null,
+      listaPartidos: [],
       listaFiltrada: [],
-      current_user: {
-        avatar: "http://via.placeholder.com/100x100/a74848",
-        user: "exampler"
-      }
     };
+  },
+  firebase: {
+    listaPartidos: partidos
   },
   props: {
     loggedIn: {
       type: Boolean,
       required: true
-    },
-    listaPartidos: {
-      type: Array,
-      required: true
-    },
+    }
   },
   created: function() {
     this.listaFiltrada = this.listaPartidos;
+  },
+  computed: {
+    current_user: function() {
+      return firebase.auth().currentUser.displayName;
+    }
   },
   methods: {
     filtrarPartidos: function() {
@@ -253,10 +274,13 @@ export default {
       }
     },
     submitComment: function(reply) {
-      this.listaPartidos[this.partidoActivo.id].comentarios.push({
-        id: this.listaPartidos[this.partidoActivo.id].comentarios.length + 1,
-        user: this.current_user.user,
-        avatar: this.current_user.avatar,
+      let nuevoComentario = db
+        .ref("partidos/" + this.partidoActivo.id + "/comentarios")
+        .push();
+      nuevoComentario.set({
+        id: nuevoComentario.key,
+        user:  firebase.auth().currentUser.displayName,
+        avatar: "http://via.placeholder.com/100x100/a74848",
         text: reply
       });
     }
