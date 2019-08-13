@@ -25,7 +25,7 @@
         </b-col>
       </b-row>
       <div class="d-flex flex-column">
-        <template v-for="partido in listaPartidos">
+        <template v-for="partido in listaFiltrada">
           <b-button
             class="d-block mt-3 mb-3 menu"
             @click="partidoActivo = partido"
@@ -47,7 +47,6 @@
       id="detalles"
       centered
       hide-footer
-      :title="partidoActivo.equipos"
       header-text-variant="white"
       body-text-variant="white"
     >
@@ -60,7 +59,7 @@
               </b-button>
             </b-col>
             <b-col cols="6">
-              <h5 class="text-center">{{ partidoActivo.equipos }}</h5>
+              <h5 class="text-center">{{ listaPartidos[partidoActivo.id].equipos }}</h5>
             </b-col>
             <b-col></b-col>
           </b-row>
@@ -68,20 +67,20 @@
       </template>
       <div class="text-center">
         <b-card header="When?" text-variant="white" class="mb-6">
-          <b-card-text>
-            <div>{{ partidoActivo.fecha }}</div>
-            <div>{{ partidoActivo.hora }}</div>
+          <b-card-text v-if="listaPartidos[partidoActivo.id]">
+            <div >{{ listaPartidos[partidoActivo.id].fecha }}</div>
+            <div>{{ listaPartidos[partidoActivo.id].hora }}</div>
           </b-card-text>
         </b-card>
       </div>
       <div class="text-center mt-3">
         <b-card header="Where?" text-variant="white">
-          <b-card-text>
-            <div>{{ partidoActivo.ubicacion }}</div>
-            <div>{{ direccion(partidoActivo.ubicacion) }}</div>
+          <b-card-text v-if="listaPartidos[partidoActivo.id]">
+            <div>{{ listaPartidos[partidoActivo.id].ubicacion }}</div>
+            <div>{{ direccion(listaPartidos[partidoActivo.id].ubicacion) }}</div>
             <div class="map-responsive mt-2">
               <iframe
-                :src="mapa(partidoActivo.ubicacion)"
+                :src="mapa(listaPartidos[partidoActivo.id].ubicacion)"
                 frameborder="0"
                 style="border:0"
                 allowfullscreen
@@ -93,7 +92,7 @@
       <div class="comments-outside" v-if="loggedIn">
         <comments
           :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
-          :comments="comments"
+          :comments="listaPartidos[partidoActivo.id].comentarios"
           :current_user="current_user"
           @submit-comment="submitComment"
         ></comments>
@@ -144,128 +143,6 @@ const ubicaciones = [
   }
 ];
 
-const partidos = [
-  {
-    id: 0,
-    equipos: "U1 vs U4",
-    fecha: "2019-09-01",
-    hora: "9:30 am",
-    ubicacion: "AJ Katzenmaier"
-  },
-  {
-    id: 1,
-    equipos: "U3 vs U2",
-    fecha: "2019-09-01",
-    hora: "1:00 pm",
-    ubicacion: "Greenbay"
-  },
-  {
-    id: 2,
-    equipos: "U5 vs U6",
-    fecha: "2019-09-08",
-    hora: "9:30 am",
-    ubicacion: "Howard A Yeager"
-  },
-  {
-    id: 3,
-    equipos: "U6 vs U1",
-    fecha: "2019-09-08",
-    hora: "1:00 pm",
-    ubicacion: "Marjorie P Hart"
-  },
-  {
-    id: 4,
-    equipos: "U2 vs U4",
-    fecha: "2019-09-15",
-    hora: "9:30 am",
-    ubicacion: "North"
-  },
-  {
-    id: 5,
-    equipos: "U3 vs U5",
-    fecha: "2019-09-15",
-    hora: "1:00 pm",
-    ubicacion: "AJ Katzenmaier"
-  },
-  {
-    id: 6,
-    equipos: "U1 vs U3",
-    fecha: "2019-09-22",
-    hora: "9:30 am",
-    ubicacion: "South"
-  },
-  {
-    id: 7,
-    equipos: "U2 vs U6",
-    fecha: "2019-09-22",
-    hora: "1:00 pm",
-    ubicacion: "Howard A Yeager"
-  },
-  {
-    id: 8,
-    equipos: "U4 vs U5",
-    fecha: "2019-09-29",
-    hora: "9:30 am",
-    ubicacion: "Greenbay"
-  },
-  {
-    id: 9,
-    equipos: "U2 vs U5",
-    fecha: "2019-10-06",
-    hora: "9:30 am",
-    ubicacion: "Marjorie P Hart"
-  },
-  {
-    id: 10,
-    equipos: "U1 vs U6",
-    fecha: "2019-10-06",
-    hora: "1:00 pm",
-    ubicacion: "South"
-  },
-  {
-    id: 11,
-    equipos: "U3 vs U4",
-    fecha: "2019-10-08",
-    hora: "9:30 am",
-    ubicacion: "Howard A Yeager"
-  },
-  {
-    id: 12,
-    equipos: "U5 vs U1",
-    fecha: "2019-10-08",
-    hora: "1:00 pm",
-    ubicacion: "Greenbay"
-  },
-  {
-    id: 13,
-    equipos: "U6 vs U3",
-    fecha: "2019-10-20",
-    hora: "9:30 am",
-    ubicacion: "North"
-  },
-  {
-    id: 14,
-    equipos: "U2 vs U4",
-    fecha: "2019-10-20",
-    hora: "1:00 pm",
-    ubicacion: "Marjorie P Hart"
-  },
-  {
-    id: 15,
-    equipos: "U3 vs U1",
-    fecha: "2019-10-27",
-    hora: "9:30 am",
-    ubicacion: "AJ Katzenmaier"
-  },
-  {
-    id: 16,
-    equipos: "U5 vs U6",
-    fecha: "2019-10-27",
-    hora: "1:00 pm",
-    ubicacion: "Howard A Yeager"
-  }
-];
-
 function obtenerDireccion(nombre) {
   let ubicacion = ubicaciones.find(function(ubicacionActual) {
     return ubicacionActual.nombre === nombre;
@@ -301,59 +178,69 @@ export default {
   },
   data() {
     return {
-      partidoActivo: "",
-      listaEquipos: [ "U1", "U2", "U3", "U4", "U5", "U6" ],
-      listaPartidos: partidos,
+      partidoActivo: {
+        id: 0,
+        equipos: "U1 vs U4",
+        fecha: "2019-09-01",
+        hora: "9:30 am",
+        ubicacion: "AJ Katzenmaier",
+        comentarios: [
+          {
+            id: 1,
+            user: "Moe",
+            avatar: "moe.png",
+            text: "Can't make it to the game, sorry."
+          },
+          {
+            id: 2,
+            user: "Larry",
+            avatar: "larry.png",
+            text: "Bringing Snacks!"
+          },
+          {
+            id: 3,
+            user: "Curly",
+            avatar: "curly.png",
+            text: "Go teams!"
+          }
+        ]
+      },
+      listaEquipos: ["U1", "U2", "U3", "U4", "U5", "U6"],
       mesSeleccionado: null,
       equipoSeleccionado: null,
+      listaFiltrada: [],
       current_user: {
         avatar: "http://via.placeholder.com/100x100/a74848",
         user: "exampler"
-      },
-      comments: [
-        {
-          id: 1,
-          user: "Moe",
-          avatar: "moe.png",
-          text: "Can't make it to the game, sorry."
-        },
-        {
-          id: 2,
-          user: "Larry",
-          avatar: "larry.png",
-          text: "Bringing Snacks!"
-        },
-        {
-          id: 3,
-          user: "Curly",
-          avatar: "curly.png",
-          text: "Go teams!"
-        }
-      ]
+      }
     };
   },
   props: {
     loggedIn: {
       type: Boolean,
       required: true
-      // default: 'false'
-    }
+    },
+    listaPartidos: {
+      type: Array,
+      required: true
+    },
+  },
+  created: function() {
+    this.listaFiltrada = this.listaPartidos;
   },
   methods: {
     filtrarPartidos: function() {
-      this.listaPartidos = partidos;
-      let listaFiltrada = this.listaPartidos;
+      this.listaFiltrada = this.listaPartidos;
       if (this.mesSeleccionado != null) {
-        listaFiltrada = listaFiltrada.filter(
+        this.listaFiltrada = this.listaFiltrada.filter(
           filtrarPartidoPorMes(this.mesSeleccionado)
         );
       }
       if (this.equipoSeleccionado != null) {
-        listaFiltrada = listaFiltrada.filter(
+        this.listaFiltrada = this.listaFiltrada.filter(
           filtrarPartidoPorEquipo(this.equipoSeleccionado)
         );
       }
-      this.listaPartidos = listaFiltrada;
     },
     direccion: function(nombre) {
       if (nombre != null) {
@@ -366,8 +253,8 @@ export default {
       }
     },
     submitComment: function(reply) {
-      this.comments.push({
-        id: this.comments.length + 1,
+      this.listaPartidos[this.partidoActivo.id].comentarios.push({
+        id: this.listaPartidos[this.partidoActivo.id].comentarios.length + 1,
         user: this.current_user.user,
         avatar: this.current_user.avatar,
         text: reply

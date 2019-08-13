@@ -46,7 +46,7 @@
 
     <!-- Muestra la vista actual -->
     <transition name="slide-fade" mode="out-in">
-      <router-view :loggedIn="isLoggedIn" />
+      <router-view :loggedIn="isLoggedIn" :listaPartidos="partidos" :db="db" />
     </transition>
 
     <!-- Ventana de login -->
@@ -104,7 +104,7 @@
             </b-form>
             <p class="text-center mt-3 mb-0">
               Don't have an account?
-              <a href class="text-white">Sign up!</a>
+              <b-link class="text-white" v-b-modal.signup @click="$bvModal.hide('login')">Sign up!</b-link>
             </p>
           </b-card-text>
         </b-card>
@@ -166,7 +166,7 @@
             </b-form>
             <p class="text-center mt-3">
               Already registered?
-              <a href class="text-white">Sign in!</a>
+              <b-link class="text-white" v-b-modal.login @click="$bvModal.hide('signup')">Sign in!</b-link>
             </p>
           </b-card-text>
         </b-card>
@@ -177,6 +177,22 @@
 
 <script>
 import firebase from "firebase";
+import { rtdbPlugin } from 'vuefire';
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCR5W7FjtDQVIhSmPSldpClS_4dXMSLxHc",
+  authDomain: "nysl-game-schedule-app.firebaseapp.com",
+  databaseURL: "https://nysl-game-schedule-app.firebaseio.com",
+  projectId: "nysl-game-schedule-app",
+  storageBucket: "",
+  messagingSenderId: "1099447516370",
+  appId: "1:1099447516370:web:81335978eb5a4f29"
+};
+
+// Initialize Firebase
+let firebaseApp = firebase.initializeApp(firebaseConfig);
+let firebaseDb = firebaseApp.database();
 
 export default {
   name: "app",
@@ -184,8 +200,13 @@ export default {
     return {
       email: "",
       password: "",
-      isLoggedIn: false
+      isLoggedIn: false,
+      partidos: [],
+      db: firebaseDb
     };
+  },
+  firebase: {
+    partidos: firebaseDb.ref('partidos'),
   },
   methods: {
     login: function() {
