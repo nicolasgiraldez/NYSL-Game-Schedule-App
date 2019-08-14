@@ -25,20 +25,20 @@
         </b-col>
       </b-row>
       <div class="d-flex flex-column">
-        <template v-for="partido in listaFiltrada">
-          <b-button
-            class="d-block mt-3 mb-3 menu"
-            @click="partidoActivo = partido"
-            v-b-modal.detalles
-            :key="partido.id"
-          >
-            <b-row class="justify-content-between">
-              <b-col class="text-left">{{ partido.fecha.slice(-5) }}</b-col>
-              <b-col cols="6">{{ partido.equipos }}</b-col>
-              <b-col></b-col>
-            </b-row>
-          </b-button>
-        </template>
+          <template v-for="partido in listaFiltrada">
+            <b-button
+              class="d-block mt-3 mb-3 menu"
+              @click="partidoActivo = partido"
+              v-b-modal.detalles
+              :key="partido.id"
+            >
+              <b-row class="justify-content-between">
+                <b-col class="text-left">{{ partido.fecha.slice(-5) }}</b-col>
+                <b-col cols="6">{{ partido.equipos }}</b-col>
+                <b-col></b-col>
+              </b-row>
+            </b-button>
+          </template>
       </div>
     </div>
 
@@ -229,7 +229,7 @@ export default {
       mesSeleccionado: null,
       equipoSeleccionado: null,
       listaPartidos: [],
-      listaFiltrada: [],
+      listaFiltrada: []
     };
   },
   firebase: {
@@ -246,7 +246,11 @@ export default {
   },
   computed: {
     current_user: function() {
-      return firebase.auth().currentUser.displayName;
+      let user = {
+        avatar: firebase.auth().currentUser.photoURL,
+        user: firebase.auth().currentUser.displayName
+      };
+      return user;
     }
   },
   methods: {
@@ -279,8 +283,8 @@ export default {
         .push();
       nuevoComentario.set({
         id: nuevoComentario.key,
-        user:  firebase.auth().currentUser.displayName,
-        avatar: "http://via.placeholder.com/100x100/a74848",
+        user: firebase.auth().currentUser.displayName,
+        avatar: firebase.auth().currentUser.photoURL,
         text: reply
       });
     }

@@ -224,7 +224,8 @@ export default {
           user => {
             let usuario = firebase.auth().currentUser;
             usuario.updateProfile({
-              displayName: this.name
+              displayName: this.name,
+              photoURL: "https://picsum.photos/100?random=" + usuario.uid,
             });
             alert("Account created successfully!");
             this.$bvModal.hide("signup");
